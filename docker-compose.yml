@@ -1,0 +1,45 @@
+version: '3.7'
+services:
+  openldap:
+    image: osixia/openldap:latest
+    container_name: openldap
+    hostname: openldap
+    ports: 
+      - "389:389"
+      - "636:636"
+    volumes:
+      - ./data/certificates:/container/service/slapd/assets/certs:z
+      - ./data/slapd/database:/var/lib/ldap:z
+      - ./data/slapd/config:/etc/ldap/slapd.d:z
+    environment: 
+      - LDAP_ORGANISATION=ramhlocal
+      - LDAP_DOMAIN=localproject.loc
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=1
+      - LDAP_CONFIG_PASSWORD=config_pass
+      - "LDAP_BASE_DN=dc=localproject,dc=loc"
+      - LDAP_TLS_CRT_FILENAME=server.crt
+      - LDAP_TLS_KEY_FILENAME=server.key
+      - LDAP_TLS_CA_CRT_FILENAME=localproject.loc.ca.crt
+      - LDAP_READONLY_USER=true
+      - LDAP_READONLY_USER_USERNAME=user-ro
+      - LDAP_READONLY_USER_PASSWORD=ro_pass
+    restart: unless-stopped
+    networks:
+      - openldap
+  
+  nginx:
+    image: nginx:stable-alpine
+    volumes:
+      - ./public:/var/www/public:z
+      - ./nginx/conf.d:/etc/nginx/conf.d:z
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    container_name: simple_nginx_html
+    networks:
+      - openldap
+
+networks:
+  openldap:
+    driver: bridge
