@@ -1,4 +1,4 @@
-# Vagrant virual machine with clean centos-8
+# Vagrant virual machine configuration for greenplum testing
 
 Your need install vagrant and virtualbox for up this configuration.
 
