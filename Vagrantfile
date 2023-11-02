@@ -5,16 +5,20 @@
 ## Network configuration ##
 ###########################
 
+# All available ranges here
+# 10.10.0.2 – 10.255.255.255
+# 172.16.0.2 – 172.31.255.255
+# 192.168.0.0 – 192.168.255.255
+# (don't uncommit, for example only)
+
 ###########################
 ######### Default #########
-# 10.10.10.9  - Kubespray #
-# 10.10.10.10 - Ingress   #
-# 10.10.10.11 - Master 1  #
-# 10.10.10.12 - Master 2  #
-# 10.10.10.13 - Master 3  #
-# 10.10.10.14 - Worker 1  #
-# 10.10.10.15 - Worker 2  #
-# 10.10.10.16 - Worker 3  #
+# 192.168.56.11 - master_1  #
+# 192.168.56.12 - master_2  #
+# 192.168.56.13 - worker_1  #
+# 192.168.56.14 - worker_2  #
+# 192.168.56.15 - worker_3  #
+# 192.168.56.16 - worker_4  #
 ###########################
 
 OS = 'bento/centos-8'
@@ -27,20 +31,10 @@ IP_ADDRESS = "192.168.56"
 # First subnet ip number for range
 IP = 10
 
-# Number of master nodes (1,3,5,7...)
+# Number of master nodes
 NUM_MASTERS = 2
-# Number of worker nodes (1 and more)
+# Number of worker nodes
 NUM_WORKERS = 4
-# Number of ingress (0-1!)
-NUM_INGRESSES = 0
-# Number of kubesprays (0-1!)
-NUM_KUBESPRAYS = 0
-
-# All available ranges here
-# 10.10.0.2 – 10.255.255.255
-# 172.16.0.2 – 172.31.255.255
-# 192.168.0.0 – 192.168.255.255
-# (don't uncommit, for example only)
 
 # Name for the master nodes
 MASTER_NAME = "master_of_puppets_"
