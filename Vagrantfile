@@ -126,8 +126,8 @@ Vagrant.configure('2') do |config|
             ip: "#{IP_ADDRESS}.#{IP}", subnet: "255.255.255.0"
             master.vm.provision "copy ssh public key", type: "shell",
             inline: "echo \"#{key}\" >> /home/vagrant/.ssh/authorized_keys"
-            # master.vm.provision "shell",
-            # privileged: true, path: "master_node_setup.sh",
+            master.vm.provision "shell", privileged: true, path: "setup.sh"
+            master.vm.synced_folder "shared", "/home/vagrant/shared_folder"
             # args: [MASTERS_LIST, MASTERS_IP, WORKERS_LIST, WORKERS_IP,
             # INGRESS_NAME, INGRESS_IP]
             master.vm.provision "shell", inline: "sudo swapoff -a"
@@ -156,8 +156,8 @@ Vagrant.configure('2') do |config|
             ip: "#{IP_ADDRESS}.#{IP}", subnet: "255.255.255.0"
             worker.vm.provision "copy ssh public key", type: "shell",
             inline: "echo \"#{key}\" >> /home/vagrant/.ssh/authorized_keys"
-            # worker.vm.provision "shell", 
-            # privileged: true, path: "worker_node_setup.sh",
+            worker.vm.provision "shell", privileged: true, path: "setup.sh"
+            worker.vm.synced_folder "shared", "/home/vagrant/shared_folder"
             # args: [MASTERS_LIST, MASTERS_IP,WORKERS_LIST, WORKERS_IP,
             # INGRESS_NAME, INGRESS_IP]
             worker.vm.provision "shell", inline: "sudo swapoff -a"
