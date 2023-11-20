@@ -33,7 +33,7 @@ help:
 
 build:
 	@printf "$(OK_COLOR)==== Building configuration ${name}... ====$(NO_COLOR)\n"
-	@vagrant box add bento/centos-8 centos
+	@vagrant box add bento/centos-8.5 centos
 
 connect:
 	@printf "$(OK_COLOR)==== Connecting to virtual machine ${name}... ====$(NO_COLOR)\n"

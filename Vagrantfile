@@ -21,7 +21,7 @@
 # 192.168.56.16 - worker_4  #
 ###########################
 
-OS = 'bento/centos-8'
+OS = 'bento/centos-8.5'
 
 # You can change ip here
 # (Range of ip addresses
@@ -32,9 +32,9 @@ IP_ADDRESS = "192.168.56"
 IP = 10
 
 # Number of master nodes
-NUM_MASTERS = 2
+NUM_MASTERS = 1
 # Number of worker nodes
-NUM_WORKERS = 4
+NUM_WORKERS = 1
 
 # Name for the master nodes
 MASTER_NAME = "master_of_puppets_"
@@ -52,24 +52,27 @@ WORKER_ALIAS = "worker"
 # scripst (don't touch!)
 MASTERS_LIST = ""
 WORKERS_LIST = ""
-MASTERS_IP = ""
-WORKERS_IP = ""
-# i = 0
-# c = 10
+MASTERS_IPS = ""
+WORKERS_IPS = ""
+
+i = 0
+c = 10
+
 # Variable creation
-# while i < NUM_MASTERS
-#     c += 1
-#     MASTERS_IP = MASTERS_IP + "#{IP_ADDRESS}.#{c}" + " "
-#     i += 1
-#     MASTERS_LIST = MASTERS_LIST + "#{MASTER_ALIAS}#{i}" + " "
-# end
-# i = 0
-# while i < NUM_WORKERS
-#     c += 1
-#     WORKERS_IP = WORKERS_IP + "#{IP_ADDRESS}.#{c}" + " "
-#     i += 1
-#     WORKERS_LIST = WORKERS_LIST + "#{WORKER_ALIAS}#{i}" + " "
-# end
+while i < NUM_MASTERS
+    c += 1
+    MASTERS_IPS = MASTERS_IPS + "#{IP_ADDRESS}.#{c}" + " "
+    i += 1
+    MASTERS_LIST = MASTERS_LIST + "#{MASTER_ALIAS}#{i}" + " "
+end
+i = 0
+while i < NUM_WORKERS
+    c += 1
+    WORKERS_IPS = WORKERS_IPS + "#{IP_ADDRESS}.#{c}" + " "
+    i += 1
+    WORKERS_LIST = WORKERS_LIST + "#{WORKER_ALIAS}#{i}" + " "
+end
+
 # First port from the range
 # For workers and masters
 # WORKER_PORT = 9090
@@ -126,9 +129,9 @@ Vagrant.configure('2') do |config|
             ip: "#{IP_ADDRESS}.#{IP}", subnet: "255.255.255.0"
             master.vm.provision "copy ssh public key", type: "shell",
             inline: "echo \"#{key}\" >> /home/vagrant/.ssh/authorized_keys"
-            master.vm.provision "shell", privileged: true, path:"setup.sh"
+            master.vm.provision "shell", privileged: true, path:"setup.sh",
+            args: [MASTERS_LIST, MASTERS_IPS, WORKERS_LIST, WORKERS_IPS]
             master.vm.synced_folder "shared", "/home/vagrant/shared_folder"
-            # args: [MASTERS_LIST, MASTERS_IP, WORKERS_LIST, WORKERS_IP]
             master.vm.provision "shell", inline: "sudo swapoff -a"
             # master.vm.provision "shell",
             # inline: "sed -i 's!/dev/mapper/debian--11--vg-swap!#/dev/mapper/debian--11--vg-swap!1' /etc/fstab"
@@ -155,9 +158,9 @@ Vagrant.configure('2') do |config|
             ip: "#{IP_ADDRESS}.#{IP}", subnet: "255.255.255.0"
             worker.vm.provision "copy ssh public key", type: "shell",
             inline: "echo \"#{key}\" >> /home/vagrant/.ssh/authorized_keys"
-            worker.vm.provision "shell", privileged: true, path:"setup.sh"
+            worker.vm.provision "shell", privileged: true, path:"setup.sh",
+            args: [MASTERS_LIST, MASTERS_IPS, WORKERS_LIST, WORKERS_IPS]
             worker.vm.synced_folder "shared", "/home/vagrant/shared_folder"
-            # args: [MASTERS_LIST, MASTERS_IP,WORKERS_LIST, WORKERS_IP]
             worker.vm.provision "shell", inline: "sudo swapoff -a"
             # worker.vm.provision "shell",
             # inline: "sed -i 's!/dev/mapper/debian--11--vg-swap!#/dev/mapper/debian--11--vg-swap!1' /etc/fstab"

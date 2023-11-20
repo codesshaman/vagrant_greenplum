@@ -6,19 +6,19 @@ Your need install [vagrant](https://github.com/hashicorp/vagrant-installers/rele
 
 ### Step 1
 
-Download box bento/centos-8 for virtualbox from [vagrantup](https://app.vagrantup.com/bento/boxes/centos-8 "vagrantup").
+Download box bento/centos-8.5 for virtualbox from [vagrantup](https://app.vagrantup.com/bento/boxes/centos-8.5 "vagrantup").
 
 ### Step 2
 
-Clonr this repository: git clone https://github.com/codesshaman/vagrant_centos_8.git
+Clonr this repository: git clone https://github.com/codesshaman/vagrant_greenplum.git
 
 ### Step 3
 
 Copy box and go inside the repository folder:
 
-``cp ~/Downloads/913d42c0-8cbe-4beb-98b7-668a670ef707 path_to/vagrant_centos_8/centos``
+``cp ~/Downloads/0305e3e9-ae91-4bbd-889f-88785f21136a path_to/vagrant_greenplum/centos``
 
-``cd vagrant_centos_8``
+``cd vagrant_greenplum``
 
 ### Step 4
 

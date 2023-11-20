@@ -62,3 +62,58 @@ yum install -y gcc make perl kernel-devel kernel-headers bzip2 dkms
 
 echo "[GreenPlum] : disable selinux..."
 sed -i 's!SELINUX=permissive!SELINUX=disabled!g' /etc/selinux/config
+
+echo "[GreenPlum] : edit hosts..."
+
+Принимаю и обрабатываю переменные:
+str1=$2
+if [[ "${str1: -1}" = " " ]]; then
+  str1="${str1%?}"
+fi
+str2=$4
+if [[ "${str2: -1}" = " " ]]; then
+  str2="${str2%?}"
+fi
+strm=$1
+if [[ "${strm: -1}" = " " ]]; then
+  strm="${strm%?}"
+fi
+strw=$3
+if [[ "${strw: -1}" = " " ]]; then
+  strw="${strw%?}"
+fi
+spce=" "
+dmin=".loc"
+mapfile -d' ' -t ipsm <<< "$str1"
+mapfile -d' ' -t ipsw <<< "$str2"
+mapfile -d' ' -t nmsm <<< "$strm"
+mapfile -d' ' -t nmsw <<< "$strw"
+
+cat > /home/vagrant/key_copy.sh << _EOF_
+#!/bin/bash
+ssh-keygen
+
+_EOF_
+chown vagrant:vagrant /home/vagrant/key_copy.sh
+chmod +x /home/vagrant/key_copy.sh
+count=0
+for ip in "${nmsm[@]}"
+do
+  # Добавление данных в /etc/hosts
+  string="$ip ${nmsm[count]} ${nmsm[count]}.loc"
+  display=$(echo "$string" | tr '\n' '^' | tr -s " " | sed 's/\^//g')
+  echo "$display" >> /etc/hosts
+  # Добавление данных в ping.sh
+  string="ping ${ip} -c 2"
+  display=$(echo "$string" | tr '\n' ' ')
+  echo "$display" >> /home/vagrant/ping.sh
+  string="ping ${nmsm[count]} -c 2"
+  display=$(echo "$string" | tr '\n' "^" | sed 's/\^//g')
+  echo "$display" >> /home/vagrant/ping.sh
+  string="ping ${nmsm[count]}.loc -c 2"
+  display=$(echo "$string" | tr '\n' "^" | sed 's/\^//g')
+  echo "$display" >> /home/vagrant/ping.sh
+  # Добавление данных в key_copy.sh
+  echo "ssh-copy-id ${nmsm[count]}" >> /home/vagrant/key_copy.sh
+ ((count++))
+done
